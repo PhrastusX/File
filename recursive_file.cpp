@@ -56,17 +56,21 @@ int main () {
 
           prev_hash = new_hash;
 
+          in_file.close();
+
       }//if
 
       else{
         continue;
       }//else
       
-      std::cout << std::endl;
+      
 
   }//for
 
-
+  std::ofstream out_file("root.txt");
+  out_file << new_hash;
+  out_file.close();
 
   
   
