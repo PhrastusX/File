@@ -25,6 +25,22 @@ bool checkIfDirectory(std::string filePath)
     return false;
 }
 
+bool checkIfSymlink(std::string filePath)
+{
+    try {
+        // Create a Path object from given path string
+        filesys::path pathObj(filePath);
+        // Check if path exists and is of a directory file
+        if (filesys::exists(pathObj) && filesys::is_symlink(pathObj))
+            return true;
+    }
+    catch (filesys::filesystem_error & e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
+    return false;
+}
+
 int main () {
 
   
@@ -33,7 +49,7 @@ int main () {
   
 
 
-  for ( filesys::recursive_directory_iterator end, dir("/home/theo/Desktop"); dir != end; ++dir ) {
+  for ( filesys::recursive_directory_iterator end, dir("/home/theo/"); dir != end; ++dir ) {
 
       h = dir->path().string();
       temp.clear();
@@ -41,7 +57,7 @@ int main () {
       
       
 
-      if(!checkIfDirectory(h)){
+      if(!checkIfDirectory(h) && !checkIfSymlink(h)){
 
           std::cout<< h <<std::endl;
           std::ifstream in_file(h);
