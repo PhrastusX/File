@@ -9,13 +9,13 @@
 
 namespace filesys = boost::filesystem;
 
-bool checkIfDirectory(std::string filePath)
+bool checkIfFile(std::string filePath)
 {
     try {
         // Create a Path object from given path string
         filesys::path pathObj(filePath);
         // Check if path exists and is of a directory file
-        if (filesys::exists(pathObj) && filesys::is_directory(pathObj))
+        if (filesys::exists(pathObj) && filesys::is_regular_file(pathObj))
             return true;
     }
     catch (filesys::filesystem_error & e)
@@ -49,7 +49,7 @@ int main () {
   
 
 
-  for ( filesys::recursive_directory_iterator end, dir("/home/theo/"); dir != end; ++dir ) {
+  for ( filesys::recursive_directory_iterator end, dir("/home"); dir != end; ++dir ) {
 
       h = dir->path().string();
       temp.clear();
@@ -57,7 +57,7 @@ int main () {
       
       
 
-      if(!checkIfDirectory(h) && !checkIfSymlink(h)){
+      if(checkIfFile(h)){
 
           std::cout<< h <<std::endl;
           std::ifstream in_file(h);
@@ -84,9 +84,7 @@ int main () {
 
       }//if
 
-      else{
-        continue;
-      }//else
+     
       
       
 
