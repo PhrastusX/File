@@ -5,6 +5,7 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#include <filesystem>
 
 namespace filesys = boost::filesystem;
 
@@ -27,28 +28,34 @@ bool checkIfDirectory(std::string filePath)
 int main () {
 
   
-  std::string h;
-  std::string new_hash;
-  std::string prev_hash;
-  std::string temp;
+  std::string h, new_hash, prev_hash, temp;
   Keccak keccak;
+  
 
 
-  for ( filesys::recursive_directory_iterator end, dir("/home/theo/file_test"); dir != end; ++dir ) {
+  for ( filesys::recursive_directory_iterator end, dir("/home/theo/Desktop"); dir != end; ++dir ) {
+
       h = dir->path().string();
       temp.clear();
+      
+      
+      
 
       if(!checkIfDirectory(h)){
 
           std::cout<< h <<std::endl;
           std::ifstream in_file(h);
 
+          //need a new way to read file in
           while(!in_file.eof()){
         
             in_file >> temp;
           
   
           }//while
+
+          
+          
           new_hash = keccak(temp);
           new_hash = keccak(new_hash + prev_hash);
 
@@ -56,6 +63,7 @@ int main () {
 
           prev_hash = new_hash;
 
+          
           in_file.close();
 
       }//if
