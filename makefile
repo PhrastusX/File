@@ -1,5 +1,6 @@
 CXX=g++
 LDLIBS= -lboost_filesystem -lboost_system
+STD= -std=c++17
 
 file: recursive_file.cpp
-	$(CXX) -std=c++17 -o file recursive_file.cpp $(LDLIBS)
+	$(CXX) $(STD) -o file recursive_file.cpp $(LDLIBS)

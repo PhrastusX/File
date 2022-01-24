@@ -1,4 +1,4 @@
-#include "boost/filesystem.hpp"
+
 #include "keccak.cpp"
 #include <iostream>
 #include <vector>
@@ -7,31 +7,15 @@
 #include <string>
 #include <filesystem>
 
-namespace filesys = boost::filesystem;
+namespace filesys = std::filesystem;
 
 bool checkIfFile(std::string filePath)
 {
     try {
         // Create a Path object from given path string
         filesys::path pathObj(filePath);
-        // Check if path exists and is of a directory file
+        // Check if path exists and is of a regular file
         if (filesys::exists(pathObj) && filesys::is_regular_file(pathObj))
-            return true;
-    }
-    catch (filesys::filesystem_error & e)
-    {
-        std::cerr << e.what() << std::endl;
-    }
-    return false;
-}
-
-bool checkIfSymlink(std::string filePath)
-{
-    try {
-        // Create a Path object from given path string
-        filesys::path pathObj(filePath);
-        // Check if path exists and is of a directory file
-        if (filesys::exists(pathObj) && filesys::is_symlink(pathObj))
             return true;
     }
     catch (filesys::filesystem_error & e)
@@ -49,7 +33,8 @@ int main () {
   
 
 
-  for ( filesys::recursive_directory_iterator end, dir("/home"); dir != end; ++dir ) {
+  for ( filesys::recursive_directory_iterator end, dir("/home/theo/Desktop/Keccak/XKCP"); 
+  dir != end; ++dir ) {
 
       h = dir->path().string();
       temp.clear();
@@ -70,8 +55,6 @@ int main () {
   
           }//while
 
-          
-          
           new_hash = keccak(temp);
           new_hash = keccak(new_hash + prev_hash);
 
@@ -83,11 +66,6 @@ int main () {
           in_file.close();
 
       }//if
-
-     
-      
-      
-
   }//for
 
   std::ofstream out_file("root.txt");
