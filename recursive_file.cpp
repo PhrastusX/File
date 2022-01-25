@@ -25,45 +25,55 @@ bool checkIfFile(std::string filePath)
     return false;
 }
 
-int main () {
+int main (int argc, char* argv[]) {
 
   
-  std::string h, new_hash, prev_hash, temp;
+  std::string new_hash, prev_hash, temp,h;
   Keccak keccak;
+  std::stringstream ss;
+  char c;
   
 
 
-  for ( filesys::recursive_directory_iterator end, dir("/home/theo/Desktop/Keccak/XKCP"); 
+  for ( filesys::recursive_directory_iterator end, dir(argv[1]); 
   dir != end; ++dir ) {
 
       h = dir->path().string();
-      temp.clear();
+      //clear the ss to make sure no other files are left
+      ss.clear();
       
-      
-      
-
       if(checkIfFile(h)){
 
-          std::cout<< h <<std::endl;
-          std::ifstream in_file(h);
+        //prints out path
+        //std::cout<< h <<std::endl;
 
-          //need a new way to read file in
-          while(!in_file.eof()){
+        //opens file
+        std::ifstream in_file(h,std::ios::binary);
+
+        //reads the files as individual characters and writes to stringstream
+        while(!in_file.eof()){
         
-            in_file >> temp;
+            in_file >> c;
+
+            ss << c;
           
   
-          }//while
+        }//while
 
-          new_hash = keccak(temp);
-          new_hash = keccak(new_hash + prev_hash);
+        //std::cout<< ss.str() << std::endl;
+          
+        //produces a keccak256 hash of the contents of ss
+        new_hash = keccak(ss.str());
 
-          std::cout << new_hash << std::endl;
+        //appends the new hash to the old hash and hashes
+        new_hash = keccak(new_hash + prev_hash);
 
-          prev_hash = new_hash;
+        //std::cout << new_hash << std::endl;
+
+        prev_hash = new_hash;
 
           
-          in_file.close();
+        in_file.close();
 
       }//if
   }//for
@@ -71,6 +81,7 @@ int main () {
   std::ofstream out_file("root.txt");
   out_file << new_hash;
   out_file.close();
+  return 0;
 
   
   
